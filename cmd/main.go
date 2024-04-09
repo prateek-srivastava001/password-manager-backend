@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"password-manager/internal/database"
 
 	"github.com/labstack/echo/v4"
-	"github.com/prateek-srivastava001/password-manager-backend/internal/database"
 )
 
 func main() {
@@ -17,9 +17,11 @@ func main() {
 		})
 	})
 
-	mongoURI := "mongodb+srv://prateeksrivastava201:hrXbQquD6WJgvU6w@cluster0.qxkjh9k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+	mongoURI := "mongodb+srv://prateeksrivastava201:ozr6FDh2RUMO5qbd@cluster0.kg1bllf.mongodb.net/?retryWrites=true&w=majority"
+
 	if err := database.Connect(mongoURI); err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
+
 	app.Logger.Fatal(app.Start(":8080"))
 }

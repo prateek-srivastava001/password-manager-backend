@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"net/http"
+	"password-manager/internal/models"
 
 	"github.com/labstack/echo/v4"
-	"github.com/prateek-srivastava001/password-manager-backend/internal/models"
 )
 
 func Login(ctx echo.Context) error {
@@ -12,10 +12,14 @@ func Login(ctx echo.Context) error {
 
 	if err := ctx.Bind(&payload); err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{
-			"message": error.Error(),
+			"message": err.Error(),
 			"status":  "failed",
 		})
 	}
 
-	
+	return ctx.JSON(http.StatusOK, map[string]string{
+		"message": "works",
+		"status":  "success",
+	})
+
 }
