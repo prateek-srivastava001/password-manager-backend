@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"password-manager/internal/models"
@@ -55,4 +56,23 @@ func GetUserByEmail(email string) (models.User, error) {
 	filter := bson.M{"email": email}
 	err := collection.FindOne(context.Background(), filter).Decode(&user)
 	return user, err
+}
+
+func AddCredential(email string, credential models.Credential) error {
+	filter := bson.M{"email": email}
+
+	update := bson.M{
+		"$push": bson.M{"credentials": credential},
+	}
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+
+	if result.ModifiedCount == 0 {
+		return errors.New("some error occured")
+	}
+
+	return nil
 }
