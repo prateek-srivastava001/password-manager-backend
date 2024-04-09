@@ -76,3 +76,13 @@ func AddCredential(email string, credential models.Credential) error {
 
 	return nil
 }
+
+func GetCredentialsForUser(email string) ([]models.Credential, error) {
+    var user models.User
+    filter := bson.M{"email": email}
+    err := collection.FindOne(context.Background(), filter).Decode(&user)
+    if err != nil {
+        return nil, err
+    }
+    return user.Credentials, nil
+}

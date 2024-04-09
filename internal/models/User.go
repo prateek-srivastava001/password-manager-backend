@@ -19,7 +19,6 @@ type SignUpRequest struct {
 }
 
 type Credential struct {
-	ID       string `json:"id"`
 	URL      string `json:"url"`
 	Email    string `json:"email"`
 	Password string `json:"password"`

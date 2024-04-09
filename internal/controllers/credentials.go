@@ -10,7 +10,7 @@ import (
 
 func AddCredential(ctx echo.Context) error {
 	var credential models.Credential
-	
+
 	if err := ctx.Bind(&credential); err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{
 			"message": "Invalid request body",
@@ -31,4 +31,16 @@ func AddCredential(ctx echo.Context) error {
 		"message": "Credential added successfully",
 		"status":  "success",
 	})
+}
+
+func GetAllCredentials(ctx echo.Context) error {
+	email := "prateek@gmail.com"
+	creds, err := database.GetCredentialsForUser(email)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{
+			"message": "Failed to fetch credentials",
+			"status":  "failed",
+		})
+	}
+	return ctx.JSON(http.StatusOK, creds)
 }
