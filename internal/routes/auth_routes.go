@@ -8,4 +8,5 @@ import (
 
 func AuthRoutes(incomingRoutes *echo.Echo) {
 	incomingRoutes.POST("/signup", controllers.Signup)
+	incomingRoutes.POST("/login", controllers.Login)
 }

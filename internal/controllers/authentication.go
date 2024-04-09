@@ -5,7 +5,9 @@ import (
 	"net/http"
 	"password-manager/internal/database"
 	"password-manager/internal/models"
+	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -85,9 +87,22 @@ func Login(ctx echo.Context) error {
 		})
 	}
 
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+	claims["email"] = user.Email
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+
+	tokenString, err := token.SignedString([]byte("mostestsecretkeyever"))
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{
+			"message": "Failed to generate token",
+			"status":  "failed",
+		})
+	}
+
 	return ctx.JSON(http.StatusOK, map[string]string{
-		"message": "works",
+		"message": "Login successful",
+		"token":   tokenString,
 		"status":  "success",
 	})
-
 }
