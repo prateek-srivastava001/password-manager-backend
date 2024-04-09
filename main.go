@@ -7,10 +7,12 @@ import (
 	"password-manager/internal/routes"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
 	app := echo.New()
+	app.Use(middleware.CORS())
 	app.GET("/ping", func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusOK, map[string]string{
 			"message": "Welcome to Password Manager",
