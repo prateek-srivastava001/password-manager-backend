@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 	"password-manager/internal/database"
 	"password-manager/internal/models"
@@ -60,6 +61,27 @@ func Login(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{
 			"message": err.Error(),
 			"status":  "failed",
+		})
+	}
+
+	user, err := database.GetUserByEmail(payload.Email)
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, map[string]string{
+			"message": "Invalid email or password",
+			"status":  "failed",
+		})
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password)); err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return ctx.JSON(http.StatusConflict, map[string]string{
+				"message": "Invalid password",
+				"status":  "fail",
+			})
+		}
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+			"status":  "error",
 		})
 	}
 
