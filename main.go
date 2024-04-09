@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"password-manager/internal/database"
+	"password-manager/internal/routes"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,6 +17,8 @@ func main() {
 			"status":  "true",
 		})
 	})
+
+	routes.AuthRoutes(app)
 
 	mongoURI := "mongodb+srv://prateeksrivastava201:ozr6FDh2RUMO5qbd@cluster0.kg1bllf.mongodb.net/?retryWrites=true&w=majority"
 
