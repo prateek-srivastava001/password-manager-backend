@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"password-manager/internal/database"
 	"password-manager/internal/models"
@@ -22,6 +23,7 @@ func AddCredential(ctx echo.Context) error {
 	credential.ID = uuid.New().String()
 
 	email := ctx.Get("user").(string)
+	fmt.Println(email)
 	err := database.AddCredential(email, credential)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{
@@ -38,6 +40,7 @@ func AddCredential(ctx echo.Context) error {
 
 func GetAllCredentials(ctx echo.Context) error {
 	email := ctx.Get("user").(string)
+	fmt.Println(email)
 	creds, err := database.GetCredentialsForUser(email)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{
@@ -50,6 +53,7 @@ func GetAllCredentials(ctx echo.Context) error {
 
 func EditCredential(ctx echo.Context) error {
 	email := ctx.Get("user").(string)
+	fmt.Println(email)
 	credentialID := ctx.Param("id")
 
 	var updatedCredential models.Credential
