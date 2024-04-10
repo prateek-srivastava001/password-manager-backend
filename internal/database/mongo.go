@@ -62,17 +62,7 @@ func AddCredential(email string, credential models.Credential) error {
 	filter := bson.M{"email": email}
 
 	update := bson.M{
-		"$push": bson.M{"credentials": credential},
-	}
-
-	var user models.User
-	err := collection.FindOne(context.Background(), filter).Decode(&user)
-	if err != nil {
-		return err
-	}
-
-	if user.Credentials == nil {
-		update["$set"] = bson.M{"credentials": []models.Credential{}}
+		"$addToSet": bson.M{"credentials": credential},
 	}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
