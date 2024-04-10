@@ -21,7 +21,7 @@ func AddCredential(ctx echo.Context) error {
 
 	credential.ID = uuid.New().String()
 
-	email := "prateek@gmail.com"
+	email := ctx.Get("user").(string)
 	err := database.AddCredential(email, credential)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{
@@ -37,7 +37,7 @@ func AddCredential(ctx echo.Context) error {
 }
 
 func GetAllCredentials(ctx echo.Context) error {
-	email := "prateek@gmail.com"
+	email := ctx.Get("user").(string)
 	creds, err := database.GetCredentialsForUser(email)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{
@@ -49,7 +49,7 @@ func GetAllCredentials(ctx echo.Context) error {
 }
 
 func EditCredential(ctx echo.Context) error {
-	email := "prateek@gmail.com"
+	email := ctx.Get("user").(string)
 	credentialID := ctx.Param("id")
 
 	var updatedCredential models.Credential
@@ -75,7 +75,7 @@ func EditCredential(ctx echo.Context) error {
 }
 
 func DeleteCredential(ctx echo.Context) error {
-	email := "prateek@gmail.com"
+	email := ctx.Get("user").(string)
 	credentialID := ctx.Param("id")
 
 	err := database.DeleteCredential(email, credentialID)

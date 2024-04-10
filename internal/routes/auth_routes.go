@@ -2,6 +2,7 @@ package routes
 
 import (
 	"password-manager/internal/controllers"
+	"password-manager/internal/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -9,8 +10,11 @@ import (
 func AuthRoutes(incomingRoutes *echo.Echo) {
 	incomingRoutes.POST("/signup", controllers.Signup)
 	incomingRoutes.POST("/login", controllers.Login)
-	incomingRoutes.POST("/credential", controllers.AddCredential)
-	incomingRoutes.GET("/all/credentials", controllers.GetAllCredentials)
-	incomingRoutes.PATCH("/credential/:id", controllers.EditCredential)
-	incomingRoutes.DELETE("/credential/:id", controllers.DeleteCredential)
+
+	auth := incomingRoutes.Group("/api")
+	auth.Use(middleware.JWTMiddleware)
+	auth.POST("/credential", controllers.AddCredential)
+	auth.GET("/all/credentials", controllers.GetAllCredentials)
+	auth.PATCH("/credential/:id", controllers.EditCredential)
+	auth.DELETE("/credential/:id", controllers.DeleteCredential)
 }
