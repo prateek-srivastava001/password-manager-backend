@@ -5,6 +5,7 @@ import (
 	"password-manager/internal/database"
 	"password-manager/internal/models"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,6 +18,8 @@ func AddCredential(ctx echo.Context) error {
 			"status":  "failed",
 		})
 	}
+
+	credential.ID = uuid.New().String()
 
 	email := "prateek@gmail.com"
 	err := database.AddCredential(email, credential)
