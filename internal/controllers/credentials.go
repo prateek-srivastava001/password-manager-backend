@@ -73,3 +73,21 @@ func EditCredential(ctx echo.Context) error {
 		"status":  "success",
 	})
 }
+
+func DeleteCredential(ctx echo.Context) error {
+	email := "prateek@gmail.com"
+	credentialID := ctx.Param("id")
+
+	err := database.DeleteCredential(email, credentialID)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{
+			"message": "Failed to delete credential",
+			"status":  "failed",
+		})
+	}
+
+	return ctx.JSON(http.StatusOK, map[string]string{
+		"message": "Credential deleted successfully",
+		"status":  "success",
+	})
+}

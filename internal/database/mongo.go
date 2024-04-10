@@ -108,3 +108,21 @@ func EditCredential(email string, credentialID string, updatedCredential models.
 
 	return nil
 }
+
+func DeleteCredential(email string, credentialID string) error {
+	filter := bson.M{"email": email}
+	update := bson.M{
+		"$pull": bson.M{"credentials": bson.M{"id": credentialID}},
+	}
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+
+	if result.ModifiedCount == 0 {
+		return errors.New("credential not found or no deletion required")
+	}
+
+	return nil
+}
