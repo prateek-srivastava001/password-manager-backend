@@ -38,9 +38,10 @@ func Signup(ctx echo.Context) error {
 	}
 
 	user := models.User{
-		Name:     payload.Name,
-		Email:    payload.Email,
-		Password: string(hashedPassword),
+		Name:        payload.Name,
+		Email:       payload.Email,
+		Password:    string(hashedPassword),
+		Credentials: []models.Credential{},
 	}
 
 	if err := database.CreateUser(user); err != nil {

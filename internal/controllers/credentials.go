@@ -25,7 +25,6 @@ func AddCredential(ctx echo.Context) error {
 	email := ctx.Get("user").(string)
 	fmt.Println(email)
 	err := database.AddCredential(email, credential)
-	fmt.Println(err)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{
 			"message": "Failed to add credential",
@@ -41,6 +40,7 @@ func AddCredential(ctx echo.Context) error {
 
 func GetAllCredentials(ctx echo.Context) error {
 	email := ctx.Get("user").(string)
+	fmt.Println(email)
 	creds, err := database.GetCredentialsForUser(email)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, map[string]string{
@@ -53,6 +53,7 @@ func GetAllCredentials(ctx echo.Context) error {
 
 func EditCredential(ctx echo.Context) error {
 	email := ctx.Get("user").(string)
+	fmt.Println(email)
 	credentialID := ctx.Param("id")
 
 	var updatedCredential models.Credential

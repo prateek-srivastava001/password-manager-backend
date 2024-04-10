@@ -62,7 +62,7 @@ func AddCredential(email string, credential models.Credential) error {
 	filter := bson.M{"email": email}
 
 	update := bson.M{
-		"$addToSet": bson.M{"credentials": credential},
+		"$push": bson.M{"credentials": credential},
 	}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
@@ -71,7 +71,7 @@ func AddCredential(email string, credential models.Credential) error {
 	}
 
 	if result.ModifiedCount == 0 {
-		return errors.New("no documents were modified")
+		return errors.New("some error occured")
 	}
 
 	return nil
