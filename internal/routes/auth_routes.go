@@ -12,5 +12,5 @@ func AuthRoutes(incomingRoutes *echo.Echo) {
 	incomingRoutes.POST("/credential", controllers.AddCredential)
 	incomingRoutes.GET("/all/credentials", controllers.GetAllCredentials)
 	incomingRoutes.PATCH("/credential/:id", controllers.EditCredential)
-	incomingRoutes.DELETE("/credential/:id", controllers.EditCredential)
+	incomingRoutes.DELETE("/credential/:id", controllers.DeleteCredential)
 }
