@@ -47,3 +47,29 @@ func GetAllCredentials(ctx echo.Context) error {
 	}
 	return ctx.JSON(http.StatusOK, creds)
 }
+
+func EditCredential(ctx echo.Context) error {
+	email := "prateek@gmail.com"
+	credentialID := ctx.Param("id")
+
+	var updatedCredential models.Credential
+	if err := ctx.Bind(&updatedCredential); err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{
+			"message": "Invalid request body",
+			"status":  "failed",
+		})
+	}
+
+	err := database.EditCredential(email, credentialID, updatedCredential)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, map[string]string{
+			"message": "Failed to edit credential",
+			"status":  "failed",
+		})
+	}
+
+	return ctx.JSON(http.StatusOK, map[string]string{
+		"message": "Credential edited successfully",
+		"status":  "success",
+	})
+}

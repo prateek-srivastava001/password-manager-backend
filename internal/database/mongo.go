@@ -78,11 +78,33 @@ func AddCredential(email string, credential models.Credential) error {
 }
 
 func GetCredentialsForUser(email string) ([]models.Credential, error) {
-    var user models.User
-    filter := bson.M{"email": email}
-    err := collection.FindOne(context.Background(), filter).Decode(&user)
-    if err != nil {
-        return nil, err
-    }
-    return user.Credentials, nil
+	var user models.User
+	filter := bson.M{"email": email}
+	err := collection.FindOne(context.Background(), filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+	return user.Credentials, nil
+}
+
+func EditCredential(email string, credentialID string, updatedCredential models.Credential) error {
+	filter := bson.M{"email": email, "credentials.id": credentialID}
+
+	update := bson.M{
+		"$set": bson.M{
+			"credentials.$.email":    updatedCredential.Email,
+			"credentials.$.password": updatedCredential.Password,
+		},
+	}
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		return err
+	}
+
+	if result.ModifiedCount == 0 {
+		return errors.New("credential not found or no update required")
+	}
+
+	return nil
 }
