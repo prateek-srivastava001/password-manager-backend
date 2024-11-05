@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var jwtSecret = []byte("abc1234")
+var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
 func GenerateJWT(email string) (string, error) {
 	claims := jwt.MapClaims{
