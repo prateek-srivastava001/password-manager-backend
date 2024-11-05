@@ -15,6 +15,6 @@ func AuthRoutes(incomingRoutes *echo.Echo) {
 	auth.Use(middleware.JWTMiddleware)
 	auth.POST("/credential", controllers.AddCredential)
 	auth.GET("/all/credentials", controllers.GetAllCredentials)
-	auth.PATCH("/credential/:id", controllers.EditCredential)
+	auth.PATCH("/credential/:id", controllers.UpdateCredential)
 	auth.DELETE("/credential/:id", controllers.DeleteCredential)
 }

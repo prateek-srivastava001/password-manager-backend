@@ -3,30 +3,46 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"password-manager/internal/database"
 	"password-manager/internal/routes"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	app := echo.New()
-	app.Use(middleware.CORS())
-	app.GET("/ping", func(ctx echo.Context) error {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+
+	database.ConnectPostgres()
+	defer database.DisconnectPostgres()
+	database.RunMigrations()
+
+	e := echo.New()
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
+	}))
+
+	routes.AuthRoutes(e)
+
+	e.GET("/ping", func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusOK, map[string]string{
 			"message": "Welcome to Password Manager",
 			"status":  "true",
 		})
 	})
 
-	routes.AuthRoutes(app)
-
-	mongoURI := "mongodb+srv://prateeksrivastava201:ozr6FDh2RUMO5qbd@cluster0.kg1bllf.mongodb.net/?retryWrites=true&w=majority"
-
-	if err := database.Connect(mongoURI); err != nil {
-		log.Fatalf("Failed to connect to MongoDB: %v", err)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
 	}
 
-	app.Logger.Fatal(app.Start(":8080"))
+	if err := e.Start(":" + port); err != nil {
+		e.Logger.Fatal(err)
+	}
 }
