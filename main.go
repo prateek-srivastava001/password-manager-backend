@@ -1,13 +1,11 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"password-manager/internal/database"
 	"password-manager/internal/routes"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
