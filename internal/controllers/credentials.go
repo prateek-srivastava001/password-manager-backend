@@ -97,6 +97,7 @@ func Login(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Login successful",
+		"name":    user.Name,
 		"token":   token,
 	})
 }
